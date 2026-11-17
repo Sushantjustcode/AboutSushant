@@ -310,33 +310,33 @@ interface MCloud {
 
 function createDistortedMCloud(): MCloud {
   const puffs: MCloudPuff[] = [];
-  const scale = 0.88 + Math.random() * 0.32;
-  const tilt = (Math.random() - 0.5) * 0.16;
-  const vx = 2.2 + Math.random() * 2.2; // drifting px/s
-  const cloudX = 140 + Math.random() * 340;
-  const cloudY = 46 + Math.random() * 36;
+  const scale = 0.92 + Math.random() * 0.32;
+  const tilt = (Math.random() - 0.5) * 0.15;
+  const vx = 2.2 + Math.random() * 0.6; // gentle drifting px/s
+  const cloudX = 160 + Math.random() * 320;
+  const cloudY = 46 + Math.random() * 30;
 
   // Asymmetric and subtly distorted "M" skeleton control points
-  const leftX = -38 - Math.random() * 10;
-  const rightX = 38 + Math.random() * 10;
-  const peakLeftY = -22 - Math.random() * 12;
-  const peakRightY = -20 - Math.random() * 14;
-  const peakLeftX = -18 - Math.random() * 6;
-  const peakRightX = 18 + Math.random() * 6;
-  const dipY = 4 + Math.random() * 10;
-  const dipX = (Math.random() - 0.5) * 8;
+  const leftX = -40 - Math.random() * 10;
+  const rightX = 40 + Math.random() * 10;
+  const peakLeftY = -24 - Math.random() * 10;
+  const peakRightY = -22 - Math.random() * 12;
+  const peakLeftX = -20 - Math.random() * 5;
+  const peakRightX = 20 + Math.random() * 5;
+  const dipY = 5 + Math.random() * 9;
+  const dipX = (Math.random() - 0.5) * 7;
   const bottomY = 16 + Math.random() * 8;
 
   const addStrokePuffs = (x1: number, y1: number, x2: number, y2: number, count: number, radiusBase: number) => {
     for (let i = 0; i <= count; i++) {
       const t = i / count;
-      const rx = x1 + (x2 - x1) * t + (Math.random() - 0.5) * 5;
+      const rx = x1 + (x2 - x1) * t + (Math.random() - 0.5) * 4;
       const ry = y1 + (y2 - y1) * t + (Math.random() - 0.5) * 4;
       puffs.push({
         relX: rx,
         relY: ry,
         radius: (radiusBase + (Math.random() - 0.5) * 4) * scale,
-        baseAlpha: 0.45 + Math.random() * 0.25,
+        baseAlpha: 0.48 + Math.random() * 0.24,
         phase: Math.random() * Math.PI * 2,
         speed: 1.1 + Math.random() * 1.5,
         driftAmp: 1.2 + Math.random() * 2.0,
@@ -344,25 +344,47 @@ function createDistortedMCloud(): MCloud {
     }
   };
 
-  // 1. Left outer pillar
-  addStrokePuffs(leftX, bottomY, peakLeftX, peakLeftY, 3, 14);
+  // 1. Left outer pillar (dense fluffy puffs)
+  addStrokePuffs(leftX, bottomY, peakLeftX, peakLeftY, 4, 15);
   // 2. Left inner slope to central dip
-  addStrokePuffs(peakLeftX, peakLeftY, dipX, dipY, 2, 13);
+  addStrokePuffs(peakLeftX, peakLeftY, dipX, dipY, 3, 14);
   // 3. Right inner slope from central dip to right peak
-  addStrokePuffs(dipX, dipY, peakRightX, peakRightY, 2, 13);
+  addStrokePuffs(dipX, dipY, peakRightX, peakRightY, 3, 14);
   // 4. Right outer pillar
-  addStrokePuffs(peakRightX, peakRightY, rightX, bottomY, 3, 14);
+  addStrokePuffs(peakRightX, peakRightY, rightX, bottomY, 4, 15);
 
-  // Soft atmospheric wisps/fluff to make it look like a real cumulus cloud
-  const fluffCount = 5 + Math.floor(Math.random() * 4);
+  // Extra crown puffs on both peaks to give plush cumulus domes
+  [-2, 2].forEach((offset) => {
+    puffs.push({
+      relX: peakLeftX + offset * 3,
+      relY: peakLeftY - 5 + (Math.random() - 0.5) * 3,
+      radius: (15 + Math.random() * 5) * scale,
+      baseAlpha: 0.52 + Math.random() * 0.22,
+      phase: Math.random() * Math.PI * 2,
+      speed: 1.0 + Math.random() * 1.2,
+      driftAmp: 1.2 + Math.random() * 1.5,
+    });
+    puffs.push({
+      relX: peakRightX + offset * 3,
+      relY: peakRightY - 5 + (Math.random() - 0.5) * 3,
+      radius: (15 + Math.random() * 5) * scale,
+      baseAlpha: 0.52 + Math.random() * 0.22,
+      phase: Math.random() * Math.PI * 2,
+      speed: 1.0 + Math.random() * 1.2,
+      driftAmp: 1.2 + Math.random() * 1.5,
+    });
+  });
+
+  // Soft atmospheric wisps/fluff to make it look like a rich, living cumulus cloud
+  const fluffCount = 8 + Math.floor(Math.random() * 4);
   for (let k = 0; k < fluffCount; k++) {
     const angle = Math.random() * Math.PI * 2;
-    const dist = 10 + Math.random() * 24;
+    const dist = 10 + Math.random() * 26;
     puffs.push({
       relX: Math.cos(angle) * dist,
-      relY: Math.sin(angle) * dist * 0.5,
-      radius: (10 + Math.random() * 7) * scale,
-      baseAlpha: 0.22 + Math.random() * 0.22,
+      relY: Math.sin(angle) * dist * 0.55,
+      radius: (11 + Math.random() * 7) * scale,
+      baseAlpha: 0.24 + Math.random() * 0.2,
       phase: Math.random() * Math.PI * 2,
       speed: 0.8 + Math.random() * 1.2,
       driftAmp: 1.0 + Math.random() * 1.8,
@@ -370,6 +392,122 @@ function createDistortedMCloud(): MCloud {
   }
 
   return { x: cloudX, y: cloudY, vx, scale, tilt, puffs };
+}
+
+// Procedural Simple Ambient Clouds
+interface AmbientCloudPuff {
+  relX: number;
+  relY: number;
+  radius: number;
+  baseAlpha: number;
+  phase: number;
+  speed: number;
+  driftAmp: number;
+}
+
+interface AmbientCloud {
+  x: number;
+  y: number;
+  scale: number;
+  tilt: number;
+  puffs: AmbientCloudPuff[];
+}
+
+function createAmbientCloud(x: number, y: number, scale = 1.0): AmbientCloud {
+  const puffs: AmbientCloudPuff[] = [];
+  const tilt = (Math.random() - 0.5) * 0.08;
+
+  // A natural cumulus cloud: base puff row + top billowing domes
+  const baseCount = 5 + Math.floor(Math.random() * 2);
+  const cloudWidth = 52 + Math.random() * 26;
+  for (let i = 0; i < baseCount; i++) {
+    const rx = -cloudWidth * 0.5 + (i / (baseCount - 1)) * cloudWidth;
+    const ry = (Math.random() - 0.5) * 4;
+    puffs.push({
+      relX: rx,
+      relY: ry,
+      radius: (11 + Math.random() * 5) * scale,
+      baseAlpha: 0.36 + Math.random() * 0.2,
+      phase: Math.random() * Math.PI * 2,
+      speed: 0.9 + Math.random() * 1.2,
+      driftAmp: 1.0 + Math.random() * 1.5,
+    });
+  }
+
+  // Top domes
+  const domeCount = 3 + Math.floor(Math.random() * 2);
+  for (let j = 0; j < domeCount; j++) {
+    const rx = (j - 1) * 13 + (Math.random() - 0.5) * 6;
+    const ry = -7 - Math.random() * 7;
+    puffs.push({
+      relX: rx,
+      relY: ry,
+      radius: (13 + Math.random() * 6) * scale,
+      baseAlpha: 0.42 + Math.random() * 0.2,
+      phase: Math.random() * Math.PI * 2,
+      speed: 1.0 + Math.random() * 1.3,
+      driftAmp: 1.1 + Math.random() * 1.5,
+    });
+  }
+
+  // Soft edge wisps
+  for (let k = 0; k < 3; k++) {
+    const rx = (Math.random() - 0.5) * (cloudWidth + 14);
+    const ry = (Math.random() - 0.5) * 14;
+    puffs.push({
+      relX: rx,
+      relY: ry,
+      radius: (8 + Math.random() * 5) * scale,
+      baseAlpha: 0.18 + Math.random() * 0.16,
+      phase: Math.random() * Math.PI * 2,
+      speed: 0.8 + Math.random() * 1.0,
+      driftAmp: 0.9 + Math.random() * 1.2,
+    });
+  }
+
+  return { x, y, scale, tilt, puffs };
+}
+
+function drawAmbientCloud(ctx: CanvasRenderingContext2D, cloud: AmbientCloud, time: number) {
+  ctx.save();
+  ctx.translate(cloud.x, cloud.y);
+  ctx.rotate(cloud.tilt);
+
+  // Soft atmospheric pastel cloud shadow
+  ctx.fillStyle = "rgba(224, 216, 238, 0.32)";
+  cloud.puffs.forEach((p) => {
+    const dy = Math.sin(time * 0.001 * p.speed + p.phase) * p.driftAmp;
+    const dx = Math.cos(time * 0.0008 * p.speed + p.phase) * (p.driftAmp * 0.7);
+    ctx.beginPath();
+    ctx.arc(p.relX + dx, p.relY + dy + 2.5, p.radius * 1.05, 0, Math.PI * 2);
+    ctx.fill();
+  });
+
+  // Luminous cumulus puffs
+  cloud.puffs.forEach((p) => {
+    const dy = Math.sin(time * 0.001 * p.speed + p.phase) * p.driftAmp;
+    const dx = Math.cos(time * 0.0008 * p.speed + p.phase) * (p.driftAmp * 0.7);
+    const rad = p.radius + Math.sin(time * 0.0012 * p.speed + p.phase) * 1.0;
+
+    const grad = ctx.createRadialGradient(
+      p.relX + dx - rad * 0.25,
+      p.relY + dy - rad * 0.25,
+      rad * 0.1,
+      p.relX + dx,
+      p.relY + dy,
+      rad
+    );
+    grad.addColorStop(0, `rgba(255, 255, 255, ${p.baseAlpha})`);
+    grad.addColorStop(0.75, `rgba(255, 252, 246, ${p.baseAlpha * 0.8})`);
+    grad.addColorStop(1, "rgba(255, 255, 255, 0)");
+
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(p.relX + dx, p.relY + dy, rad, 0, Math.PI * 2);
+    ctx.fill();
+  });
+
+  ctx.restore();
 }
 
 function drawDistortedMCloud(ctx: CanvasRenderingContext2D, cloud: MCloud, time: number) {
@@ -500,6 +638,7 @@ export function AppleOfDestiny() {
       grounded: boolean;
     } | null;
     mCloud: MCloud | null;
+    ambientClouds: AmbientCloud[];
     ragdoll: {
       active: boolean;
       nodes: RagdollNode[];
@@ -522,6 +661,7 @@ export function AppleOfDestiny() {
     stuckSpears: [],
     apple: null,
     mCloud: null,
+    ambientClouds: [],
     ragdoll: null,
     particles: [],
     shake: 0,
@@ -623,7 +763,14 @@ export function AppleOfDestiny() {
     s.spear = null;
     s.stuckSpears = [];
     s.apple = null;
-    s.mCloud = createDistortedMCloud();
+    const m = createDistortedMCloud();
+    s.mCloud = m;
+    // Generate 3 simple natural ambient clouds with comfortable gaps around the secret M-cloud
+    s.ambientClouds = [
+      createAmbientCloud((m.x - 240 + W * 2) % W, 36 + Math.random() * 24, 0.9 + Math.random() * 0.25),
+      createAmbientCloud((m.x + 220) % W, 44 + Math.random() * 26, 0.85 + Math.random() * 0.25),
+      createAmbientCloud((m.x + 460) % W, 32 + Math.random() * 24, 0.8 + Math.random() * 0.2),
+    ];
     s.ragdoll = null;
     s.particles = [];
     s.shake = 0;
@@ -1058,13 +1205,16 @@ export function AppleOfDestiny() {
         }
       }
 
-      // Update Distorted "M" Cloud (gentle horizontal drift with wrap-around)
+      // Update Distorted "M" Cloud and Ambient Clouds (synchronized sky drift)
+      const cloudVx = s.mCloud ? s.mCloud.vx : 2.4;
       if (s.mCloud) {
-        s.mCloud.x += s.mCloud.vx * dt;
-        if (s.mCloud.x > W + 90) {
-          s.mCloud.x = -90;
-        }
+        s.mCloud.x += cloudVx * dt;
+        if (s.mCloud.x > W + 90) s.mCloud.x = -90;
       }
+      s.ambientClouds.forEach((ac) => {
+        ac.x += cloudVx * dt;
+        if (ac.x > W + 90) ac.x = -90;
+      });
 
       // Update Falling Apple Physics (when stickman is hit, apple falls directly to ground)
       if (s.apple && s.apple.falling) {
@@ -1101,7 +1251,12 @@ export function AppleOfDestiny() {
       ctx.fillStyle = skyGrad;
       ctx.fillRect(0, 0, W, H);
 
-      // Distorted "M" Cloud in the Sky (alive, non-static, morphing organic cloud)
+      // Ambient Clouds in the sky (with clear gap to keep M-cloud distinct)
+      s.ambientClouds.forEach((ac) => {
+        drawAmbientCloud(ctx, ac, now);
+      });
+
+      // Distorted "M" Cloud in the Sky (alive, non-static, with clear spacing from other clouds!)
       if (s.mCloud) {
         drawDistortedMCloud(ctx, s.mCloud, now);
       }
@@ -1528,8 +1683,51 @@ export function AppleOfDestiny() {
 
   return (
     <div className="w-full flex flex-col items-center select-none font-sans">
-      {/* Arcade Header HUD */}
-      <div className="w-full flex flex-wrap items-center justify-between gap-2.5 mb-3 px-1 text-xs sm:text-sm">
+      {/* Arcade Header HUD: Ultra-compact, single-line on mobile to maximize canvas height */}
+      {/* Mobile Bar (< sm): Strict 1-row, beautifully organized layout maximizing canvas height */}
+      <div className="w-full flex items-center justify-between gap-1 mb-1.5 px-0.5 sm:hidden text-xs">
+        {/* Left: Distance & Wind in tight chips */}
+        <div className="flex items-center gap-1 min-w-0">
+          <span className="chip !text-[0.62rem] !py-0.5 !px-1.5 font-mono bg-lav/30 border border-lav-deep/20 font-bold shrink-0">
+            🎯 {targetDistanceMeters}m
+          </span>
+          <div
+            className="chip !text-[0.62rem] !py-0.5 !px-1.5 font-mono bg-butter/30 border border-butter-deep/20 font-bold shrink-0"
+            title="Crosswind velocity"
+          >
+            💨 {windDisplay > 0 ? `▶${windDisplay}` : windDisplay < 0 ? `◀${Math.abs(windDisplay)}` : "CALM"}
+          </div>
+        </div>
+
+        {/* Center: Streak & Score */}
+        <div className="flex items-center gap-1 font-mono text-[0.68rem] font-bold text-ink shrink-0">
+          <span className="text-lav-deep">{streak}🔥</span>
+          <span className="opacity-30">|</span>
+          <span className="text-sage-deep">{score}★</span>
+        </div>
+
+        {/* Right: Sound & New Range */}
+        <div className="flex items-center gap-1 shrink-0">
+          <button
+            onClick={toggleSound}
+            className="key !p-1 text-xs leading-none"
+            title={soundOn ? "Mute" : "Unmute"}
+          >
+            {soundOn ? "🔊" : "🔇"}
+          </button>
+          <button
+            onClick={restartRound}
+            className="key !py-1 !px-2 text-[0.68rem] font-bold flex items-center gap-0.5 leading-none"
+            title="Generate new landscape"
+          >
+            <span>↻</span>
+            <span>New</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Desktop / Tablet Header (>= sm) */}
+      <div className="w-full hidden sm:flex items-center justify-between gap-2.5 mb-2.5 px-1 text-xs sm:text-sm">
         <div className="flex items-center gap-2">
           <span className="font-display font-bold text-base sm:text-lg text-ink tracking-tight flex items-center gap-1.5">
             <span>🎯</span> Apple of Destiny
@@ -1601,13 +1799,6 @@ export function AppleOfDestiny() {
           </div>
         )}
 
-        {/* Quick Start Guide */}
-        {!aimInfo && sim.current.status === "aiming" && !feedback && (
-          <div className="absolute top-3 left-1/2 -translate-x-1/2 pointer-events-none bg-ink/65 backdrop-blur-xs text-white px-3.5 py-1 rounded-full text-[0.72rem] sm:text-xs font-mono tracking-wide opacity-85 flex items-center gap-2">
-            <span>🏹 DRAG &amp; PULL BACK TO AIM · RELEASE TO THROW</span>
-          </div>
-        )}
-
         {/* Floating Non-Obstructive Arcade Result Pill Banner - NO screen blur, NO background dimming, 100% crystal clear */}
         {feedback && (
           <div className="absolute top-3 left-1/2 -translate-x-1/2 z-20 pointer-events-auto max-w-[94%] sm:max-w-md w-full px-2">
@@ -1649,9 +1840,10 @@ export function AppleOfDestiny() {
       </div>
 
       {/* Tactile Bottom Controls Bar */}
-      <div className="w-full mt-3 flex items-center justify-end px-1 text-xs text-ink-soft">
-        <div className="font-mono text-[0.72rem] font-bold text-ink">
-          ALL-TIME RECORD: <span className="text-lav-deep">{bestStreak} STREAK</span>
+      <div className="w-full mt-1.5 sm:mt-2.5 flex items-center justify-between sm:justify-end px-1 text-[0.68rem] sm:text-xs text-ink-soft">
+        <span className="sm:hidden font-mono text-[0.65rem] text-ink-soft/80">🏹 Pull back to aim · release</span>
+        <div className="font-mono text-[0.68rem] sm:text-xs font-bold text-ink">
+          RECORD: <span className="text-lav-deep">{bestStreak} STREAK</span>
         </div>
       </div>
     </div>
