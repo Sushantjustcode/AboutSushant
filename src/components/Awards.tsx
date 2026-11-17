@@ -182,10 +182,10 @@ export function Awards() {
       observer.observe(root.current);
     }
 
-    // Scroll reaction only when visible
+    // Scroll reaction on desktop only (no scroll-physics on mobile)
     let lastScrollY = window.scrollY;
     const onScroll = () => {
-      if (!isVisible) return;
+      if (!isVisible || !window.matchMedia("(min-width: 900px)").matches) return;
       const currentScrollY = window.scrollY;
       const delta = currentScrollY - lastScrollY;
       lastScrollY = currentScrollY;

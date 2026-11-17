@@ -77,10 +77,22 @@ const Ctx = createContext<MotionState>({
 
 export function MotionProvider({ children }: { children: ReactNode }) {
   const [tier, setTier] = useState<PerformanceTier>(detectPerformanceTier);
+  const [isDesktop, setIsDesktop] = useState(() =>
+    typeof window !== "undefined" ? window.matchMedia("(min-width: 900px) and (pointer: fine)").matches : false
+  );
   const [reduced, setReduced] = useState(() =>
     typeof window !== "undefined" ? window.matchMedia("(prefers-reduced-motion: reduce)").matches : false
   );
   const [lenisInstance, setLenisInstance] = useState<Lenis | null>(null);
+
+  // Monitor screen size & pointer changes dynamically
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(min-width: 900px) and (pointer: fine)");
+    const onChange = () => setIsDesktop(mq.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
 
   // Monitor prefers-reduced-motion changes dynamically
   useEffect(() => {
@@ -95,29 +107,34 @@ export function MotionProvider({ children }: { children: ReactNode }) {
     return () => mq.removeEventListener("change", onChange);
   }, []);
 
-  // Adaptive Ultra-Smooth 60/120fps Lenis Smooth Scrolling Engine
+  // Dedicated Desktop-Only Lenis Smooth Scrolling Engine (Native touch scrolling on mobile)
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const isMobile = window.matchMedia("(max-width: 899px)").matches;
-    const isLow = tier === "low" || reduced;
+    // Mobile resolution or touch devices use pure 100% native momentum scrolling
+    if (!isDesktop || reduced) {
+      setLenisInstance(null);
+      globalLenis = null;
+      return;
+    }
+
+    const isLow = tier === "low";
     const isBalanced = tier === "balanced";
 
     const lenis = new Lenis({
-      duration: isMobile ? 0.6 : isLow ? 0.8 : isBalanced ? 1.0 : 1.2,
+      duration: isLow ? 0.85 : isBalanced ? 1.05 : 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
       wheelMultiplier: 1.0,
-      touchMultiplier: isMobile ? 1.0 : 1.15,
       infinite: false,
     });
 
     globalLenis = lenis;
     setLenisInstance(lenis);
 
-    // Synchronize Lenis with GSAP ScrollTrigger
+    // Synchronize Lenis with GSAP ScrollTrigger for 60/120/144fps desktop scrolling
     lenis.on("scroll", ScrollTrigger.update);
 
     const updateLenis = (time: number) => {
@@ -126,7 +143,7 @@ export function MotionProvider({ children }: { children: ReactNode }) {
     gsap.ticker.add(updateLenis);
     gsap.ticker.lagSmoothing(0);
 
-    // Intercept in-page anchor clicks for smooth scroll
+    // Intercept in-page anchor clicks for smooth scroll on desktop
     const handleAnchorClick = (e: MouseEvent) => {
       const target = (e.target as HTMLElement).closest("a");
       if (!target) return;
@@ -137,7 +154,7 @@ export function MotionProvider({ children }: { children: ReactNode }) {
           e.preventDefault();
           lenis.scrollTo(el as HTMLElement, {
             offset: -60,
-            duration: isLow ? 0.6 : 1.1,
+            duration: 1.2,
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
           });
         }
@@ -152,7 +169,7 @@ export function MotionProvider({ children }: { children: ReactNode }) {
       globalLenis = null;
       setLenisInstance(null);
     };
-  }, [tier, reduced]);
+  }, [isDesktop, tier, reduced]);
 
   useEffect(() => {
     document.documentElement.classList.remove("no-motion");
