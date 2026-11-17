@@ -145,9 +145,8 @@ export function Hero() {
                 height={420}
                 fetchPriority="high"
                 decoding="async"
-                className={`absolute inset-0 w-full h-full object-contain pointer-events-none transition-opacity duration-300 ease-in-out select-none ${
-                  isHovered ? "opacity-0" : "opacity-100"
-                }`}
+                className={`absolute inset-0 w-full h-full object-contain pointer-events-none transition-opacity duration-300 ease-in-out select-none ${isHovered ? "opacity-0" : "opacity-100"
+                  }`}
               />
 
               {/* Variant 2: Playful 3D sculpt with wink */}
@@ -158,9 +157,8 @@ export function Hero() {
                 height={420}
                 loading="lazy"
                 decoding="async"
-                className={`absolute inset-0 w-full h-full object-contain pointer-events-none transition-opacity duration-300 ease-in-out select-none ${
-                  isHovered ? "opacity-100" : "opacity-0"
-                }`}
+                className={`absolute inset-0 w-full h-full object-contain pointer-events-none transition-opacity duration-300 ease-in-out select-none ${isHovered ? "opacity-100" : "opacity-0"
+                  }`}
               />
             </div>
           </div>
@@ -172,19 +170,19 @@ export function Hero() {
             data-hero-fade
             className="text-[0.98rem] sm:text-[1.12rem] leading-relaxed text-ink-soft font-normal max-w-[34rem]"
           >
-            Hi, I'm <strong className="text-ink font-semibold">{PROFILE.name}</strong>. Doing BCA - AI from KUK University. I design full-stack MERN applications at one bench and build atmospheric horror game environments and 3D assets at the other.
+            Hi, I'm <strong className="text-ink font-semibold">{PROFILE.name}</strong>. Doing BCA - AI from KUK University. I design full-stack MERN applications at one bench and build atmospheric game environments and 3D assets at the other.
           </p>
 
           {/* Simple, peaceful tag row without click sound or hover bounce */}
           <div data-hero-fade className="mt-4 sm:mt-6 flex flex-wrap items-center gap-2">
             <span className="chip !text-[0.76rem]" style={{ ["--chip" as string]: "var(--color-lav)" }}>
-              💻 Full-Stack MERN
+              💻 MERN Stack
             </span>
             <span className="chip !text-[0.76rem]" style={{ ["--chip" as string]: "var(--color-sage)" }}>
               🌲 3D Environment Art
             </span>
             <span className="chip !text-[0.76rem]" style={{ ["--chip" as string]: "var(--color-butter)" }}>
-              ⚡ JC Software Intern
+              ⚡ Level Design
             </span>
           </div>
 
