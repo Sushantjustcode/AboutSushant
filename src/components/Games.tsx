@@ -4,12 +4,12 @@ import { gsap, revealAll, useScrollScope } from "../lib/motion";
 import { sfx } from "../lib/sfx";
 
 const TowerStack = lazy(() => import("./games/TowerStack").then((m) => ({ default: m.TowerStack })));
-const Reaction = lazy(() => import("./games/Reaction").then((m) => ({ default: m.Reaction })));
+const AppleOfDestiny = lazy(() => import("./games/AppleOfDestiny").then((m) => ({ default: m.AppleOfDestiny })));
 const Puzzle = lazy(() => import("./games/Puzzle").then((m) => ({ default: m.Puzzle })));
 
 const CARTS = [
   { id: "stack", n: "01", name: "Tower Stack", kind: "Precision Stack", tone: "var(--color-sage)" },
-  { id: "tap", n: "02", name: "Tap Switch", kind: "Reaction", tone: "var(--color-butter)" },
+  { id: "destiny", n: "02", name: "Apple Destiny", kind: "Spear Physics", tone: "var(--color-butter)" },
   { id: "mend", n: "03", name: "Circuit Mend", kind: "Puzzle", tone: "var(--color-peach)" },
 ] as const;
 
@@ -83,7 +83,7 @@ export function Games() {
                 }
               >
                 {cart === "stack" && <TowerStack />}
-                {cart === "tap" && <Reaction />}
+                {cart === "destiny" && <AppleOfDestiny />}
                 {cart === "mend" && <Puzzle />}
               </Suspense>
             </div>
