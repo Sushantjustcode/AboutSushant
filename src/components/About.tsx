@@ -43,13 +43,13 @@ function LeftPage() {
         </div>
         <div>
           <dt className="eyebrow">Current Focus</dt>
-          <dd className="font-semibold">MERN Stack Engineering & 3D Level Art</dd>
-          <dd className="text-xs text-ink-soft">Internship at JC Software Solutions, Mohali</dd>
+          <dd className="font-semibold">MERN Stack Engineering</dd>
+          <dd className="text-xs text-ink-soft">self learner</dd>
         </div>
         <div>
           <dt className="eyebrow">Off-screen Interests</dt>
           <dd className="flex flex-wrap gap-1.5 mt-1">
-            {["Football", "Basketball", "Game Modding", "Synthesizers"].map((t, i) => (
+            {["Football", "Basketball", "level desing", "Gaming"].map((t, i) => (
               <span key={t} className="chip !text-[0.7rem] !py-0.5 !px-2" style={{ ["--chip" as string]: ["var(--color-sage)", "var(--color-peach)", "var(--color-lav)", "var(--color-butter)"][i % 4] }}>
                 {t}
               </span>
@@ -135,10 +135,10 @@ export function About() {
                     Hi, I'm {PROFILE.name.split(" ")[0]}. Doing <b>BCA - AI</b> at Kurukshetra University.
                   </p>
                   <p data-page-in>
-                    At the <b>code bench</b>, I build full-stack web applications using the MERN stack (MongoDB, Express, React, Node.js) and modern Tailwind CSS. Creator of <b>Findit</b> — a lost-and-found community platform connecting people and reuniting belongings.
+                    At the <b>code bench</b>, I build full-stack web applications using the MERN stack (MongoDB, Express, React, Node.js) and modern Tailwind CSS.
                   </p>
                   <p data-page-in>
-                    At the <b>world bench</b>, I construct atmospheric horror forest environments and game-ready 3D assets in Blender and Unreal Engine with PBR texturing.
+                    At the <b>world bench</b>, I construct atmospheric environments and level design, worked on indie projects and made several COOL levels. also in 3D assets in Blender and Unreal Engine.
                   </p>
                   <p data-page-in className="text-[0.86rem] text-ink-soft">
                     Passionate about clean architecture, responsive micro-interactions, and immersive 3D craft.
@@ -149,10 +149,10 @@ export function About() {
                     MERN stack
                   </span>
                   <span className="chip !text-[0.72rem] !py-0.5 !px-2" style={{ ["--chip" as string]: "var(--color-sage)" }}>
-                    Horror Level Art
+                    Level Design
                   </span>
                   <span className="chip !text-[0.72rem] !py-0.5 !px-2" style={{ ["--chip" as string]: "var(--color-butter)" }}>
-                    BCA - AI @ KUK
+                    Environment art
                   </span>
                 </div>
               </div>
